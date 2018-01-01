@@ -1,4 +1,4 @@
-class SessionsController < ApplicationController
+class Api::V1::SessionsController < ApplicationController
   
   skip_before_action :authenticate
   
@@ -14,3 +14,5 @@ class SessionsController < ApplicationController
     def auth_params
       params.require(:auth).permit(:email, :password)
     end
+    
+end

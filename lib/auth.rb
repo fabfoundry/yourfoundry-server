@@ -19,7 +19,7 @@ class Auth
   end
   
   def self.auth_secret
-    ENV["AUTH_SECRET"]
+    Rails.application.secrets.AUTH_SECRET
   end
   
 end
