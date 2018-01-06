@@ -21,5 +21,5 @@ class Auth
   def self.auth_secret
     ENV["AUTH_SECRET"]
   end
-  
+
 end
