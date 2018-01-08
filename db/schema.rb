@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20171231212413) do
     t.string "email"
     t.string "company_name"
     t.string "password_digest"
+    t.string "role", default: "startup"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
