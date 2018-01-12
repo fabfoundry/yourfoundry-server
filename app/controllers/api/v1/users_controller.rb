@@ -1,3 +1,5 @@
+require 'auth'
+
 class Api::V1::UsersController < ApplicationController
 
   skip_before_action :authenticate, only: [:create]
@@ -15,6 +17,16 @@ class Api::V1::UsersController < ApplicationController
         password: user_params[:password]
       )
       render json: {request: "complete"}
+    end
+  end
+
+  def show
+    user_id = Auth.decode(request.headers["AUTHORIZATION"].split(" ").last)["user"]
+    user = User.find(user_id)
+    if params[:id] == "startupName"
+      render json: {startupName: user.company_name}, status: 200
+    elsif params[:id] == "all"
+      render json: {user: user}, status: 200
     end
   end
 
