@@ -2,7 +2,7 @@ require 'auth'
 
 class Api::V1::SessionsController < ApplicationController
 
-  skip_before_action :authenticate
+  skip_before_action :authenticate, only: [:create]
 
   def create
     user = User.find_by(email: auth_params[:email])
