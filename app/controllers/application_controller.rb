@@ -24,6 +24,7 @@ class ApplicationController < ActionController::API
   private
 
     def token
+      puts request.headers["Authorization"].split(" ").last
       request.headers["Authorization"].split(" ").last
     end
 
