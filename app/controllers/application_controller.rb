@@ -29,6 +29,7 @@ class ApplicationController < ActionController::API
     end
 
     def auth
+      puts Auth.decode(token)
       Auth.decode(token)
     end
 
