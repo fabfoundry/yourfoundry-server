@@ -24,7 +24,6 @@ class ApplicationController < ActionController::API
   private
 
     def token
-      puts request.headers["Authorization"].split(" ").last
       request.headers["Authorization"].split(" ").last
     end
 
@@ -33,7 +32,6 @@ class ApplicationController < ActionController::API
     end
 
     def auth_present?
-      puts request.headers["Authorization"].split(" ").first.scan(/Bearer/).flatten.first
       !!request.headers["Authorization"].split(" ").first.scan(/Bearer/).flatten.first
     end
 

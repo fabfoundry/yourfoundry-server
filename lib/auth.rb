@@ -12,11 +12,6 @@ class Auth
   end
 
   def self.decode(token)
-    puts JWT.decode(token,
-      auth_secret,
-      true,
-      { algorithm: ALGORITHM }).first
-
       JWT.decode(token,
         auth_secret,
         true,
@@ -24,7 +19,6 @@ class Auth
   end
 
   def self.auth_secret
-    # Rails.application.secrets.AUTH_SECRET
     ENV["AUTH_SECRET"]
   end
 
