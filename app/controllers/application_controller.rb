@@ -25,7 +25,7 @@ class ApplicationController < ActionController::API
 
     def token
       # request.headers["Authorization"].split(" ").last
-      request.env["HTTP_AUTHORIZATION"].scan(/Bearer(.*)$/).flatten.last
+      request.env["HTTP_AUTHORIZATION"].scan(/Bearer(.*)$/).flatten.last.strip
     end
 
     def auth
