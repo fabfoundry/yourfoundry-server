@@ -21,9 +21,9 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
-    if params[:id] == "startupName"
+    if params["q"] == "startupName"
       render json: {startupName: @current_user.company_name}, status: 200
-    elsif params[:id] == "all"
+    elsif params["q"] == "all"
       render json: {user: @current_user}, status: 200
     end
   end
