@@ -24,7 +24,7 @@ class ApplicationController < ActionController::API
   private
 
     def token
-      request.env["HTTP_AUTHORIZATION"].scan(/Bearer(.*)$/).flatten.last.strip
+      request.headers["Authorization"].split(" ").last
     end
 
     def auth
@@ -32,7 +32,7 @@ class ApplicationController < ActionController::API
     end
 
     def auth_present?
-      !!request.env.fetch("HTTP_AUTHORIZATION","").scan(/Bearer/).flatten.first
+      !!request.headers["Authorization"].split(" ").first.scan(/Bearer/).flatten.first
     end
 
 
