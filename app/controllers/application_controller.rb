@@ -29,11 +29,11 @@ class ApplicationController < ActionController::API
     end
 
     def auth
-      puts Auth.decode(token)
       Auth.decode(token)
     end
 
     def auth_present?
+      puts request.env.fetch("HTTP_AUTHORIZATION", "")
       # !!request.headers["Authorization"].split(" ").first.scan(/Bearer/).flatten.first
       !!request.env.fetch("HTTP_AUTHORIZATION", "").scan(/Bearer/).flatten.first
     end
