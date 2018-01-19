@@ -19,6 +19,11 @@ class Api::V1::ProjectsController < ApplicationController
     end
   end
 
+  def destroy
+    @current_user.projects.find(params[:id].to_i).destroy
+    render json: {request: "complete", projects: @current_user.projects}
+  end
+
   private
     def project_params
       params.require(:project).permit(:newProject)
