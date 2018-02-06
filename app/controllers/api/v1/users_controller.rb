@@ -38,18 +38,23 @@ class Api::V1::UsersController < ApplicationController
     blob = Base64.decode64(base64_string)
     image = MiniMagick::Image.read(blob)
     s3 = Aws::S3::Resource.new(
-      credentials: Aws::Credentials.new(Rails.application.secrets.ACCESS_KEY_ID, Rails.application.secrets.SECRET_ACCESS_KEY),
-      region: Rails.application.secrets.AWS_REGION
+      # credentials: Aws::Credentials.new(Rails.application.secrets.ACCESS_KEY_ID, Rails.application.secrets.SECRET_ACCESS_KEY),
+      # region: Rails.application.secrets.AWS_REGION
+      credentials: Aws::Credentials.new(ENV["ACCESS_KEY_ID"], ENV["SECRET_ACCESS_KEY"]),
+      region: ENV["AWS_REGION"]
     )
     if @current_user.profile_photo.length > 0
-      previous_obj_key = @current_user.profile_photo.split("https://s3.amazonaws.com/" + Rails.application.secrets.AWS_BUCKET + '/')[1]
-      obj = s3.bucket(Rails.application.secrets.AWS_BUCKET).object(previous_obj_key)
+      # previous_obj_key = @current_user.profile_photo.split("https://s3.amazonaws.com/" + Rails.application.secrets.AWS_BUCKET + '/')[1]
+      # obj = s3.bucket(Rails.application.secrets.AWS_BUCKET).object(previous_obj_key)
+      previous_obj_key = @current_user.profile_photo.split("https://s3.amazonaws.com/" + ENV["AWS_BUCKET"] + '/')[1]
+      obj = s3.bucket(ENV["AWS_BUCKET"]).object(previous_obj_key)
       obj.delete
     end
-    # obj = s3.bucket(Rails.application.secrets.AWS_BUCKET).object("images/startup/profile_images/profile_image_#{@current_user.id}")
-    obj = s3.bucket(Rails.application.secrets.AWS_BUCKET).object("images/testing/profile_images/profile_image_#{@current_user.id}_#{rand(0..10000)}")
+    # obj = s3.bucket(Rails.application.secrets.AWS_BUCKET).object("images/testing/profile_images/profile_image_#{@current_user.id}_#{rand(0..10000)}")
+    obj = s3.bucket(ENV["AWS_BUCKET"]).object("images/startup/profile_images/profile_image_#{@current_user.id}_#{rand(0..10000)}")
     obj.upload_file(image.path, acl:'public-read')
-    img_url = "https://s3.amazonaws.com/" + Rails.application.secrets.AWS_BUCKET + '/' + obj.key
+    # img_url = "https://s3.amazonaws.com/" + Rails.application.secrets.AWS_BUCKET + '/' + obj.key
+    img_url = "https://s3.amazonaws.com/" + ENV["AWS_BUCKET"] + '/' + obj.key
     @current_user.update(profile_photo: img_url)
   end
 
