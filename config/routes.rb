@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       resources :users
       resources :projects
       post '/login', to: "sessions#create"
+      post '/profile/photo/update', to: "users#upadate_profile_photo"
     end
   end
 end

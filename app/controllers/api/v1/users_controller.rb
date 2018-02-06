@@ -1,4 +1,7 @@
 require 'auth'
+require 'base64'
+require "mini_magick"
+require 'aws-sdk'
 
 class Api::V1::UsersController < ApplicationController
 
@@ -26,6 +29,28 @@ class Api::V1::UsersController < ApplicationController
     elsif params["q"] == "all"
       render json: {user: @current_user}, status: 200
     end
+  end
+
+  def upadate_profile_photo
+    uploaded_io = params["imageBase64"]
+    metadata = uploaded_io.split(",")[0] + ","
+    base64_string = uploaded_io[metadata.size..-1]
+    blob = Base64.decode64(base64_string)
+    image = MiniMagick::Image.read(blob)
+    s3 = Aws::S3::Resource.new(
+      credentials: Aws::Credentials.new(Rails.application.secrets.ACCESS_KEY_ID, Rails.application.secrets.SECRET_ACCESS_KEY),
+      region: Rails.application.secrets.AWS_REGION
+    )
+    if @current_user.profile_photo.length > 0
+      previous_obj_key = @current_user.profile_photo.split("https://s3.amazonaws.com/" + Rails.application.secrets.AWS_BUCKET + '/')[1]
+      obj = s3.bucket(Rails.application.secrets.AWS_BUCKET).object(previous_obj_key)
+      obj.delete
+    end
+    # obj = s3.bucket(Rails.application.secrets.AWS_BUCKET).object("images/startup/profile_images/profile_image_#{@current_user.id}")
+    obj = s3.bucket(Rails.application.secrets.AWS_BUCKET).object("images/testing/profile_images/profile_image_#{@current_user.id}_#{rand(0..10000)}")
+    obj.upload_file(image.path, acl:'public-read')
+    img_url = "https://s3.amazonaws.com/" + Rails.application.secrets.AWS_BUCKET + '/' + obj.key
+    @current_user.update(profile_photo: img_url)
   end
 
   private
