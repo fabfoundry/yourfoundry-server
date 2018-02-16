@@ -19,8 +19,11 @@ class Auth
   end
 
   def self.auth_secret
-    # Rails.application.secrets.AUTH_SECRET
-    ENV["AUTH_SECRET"]
+    if Rails.env.development?
+     Rails.application.secrets.AUTH_SECRET
+    elsif Rails.env.test?
+      ENV["AUTH_SECRET"]
+    end
   end
 
 end
