@@ -6,6 +6,18 @@ class Api::V1::ProjectsController < ApplicationController
   end
 
 
+  def show
+    project = @current_user.projects.select do |project|
+      project[:id] == params[:id].to_i
+    end
+    
+    if project.empty?
+      render json: {request: "error"}
+    else
+      render json: {project: project[0]}
+    end
+  end
+
   def create
     exists = @current_user.projects.select do |project|
       project[:name].downcase == project_params[:newProject].downcase
